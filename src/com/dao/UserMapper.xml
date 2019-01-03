@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.UserMapper">	
+	<!-- 添加用户 -->
+    <select id="addUser"  parameterType="com.pojo.User">
+    	 insert into [User]  (name,phoneNum,userName,password)
+			values (#{name},#{phoneNum},#{userName},#{password})
+    </select>
+    <!-- 查询所有用户 -->
+	
+    <select id="selectAllUser" resultType="com.pojo.User" >
+    		select * from [User] 
+	</select>
+     <!-- 查询用户根据id -->
+    <select id="selectUserById" resultType="com.pojo.User" parameterType="String">
+    		select * from [User]  where id=#{id}
+	</select>
+	<!-- 查询用户根据名字模糊 -->
+    <select id="selectUserLikeName" resultType="com.pojo.User" parameterType="String">
+    		select * from [User]  where name like "%"#{name}"%"
+	</select>
+	<!-- 查询用户根据名字 -->
+    <select id="selectUserByName" resultType="com.pojo.User" parameterType="String">
+    		select * from [User]  where name  =#{name}
+	</select>
+    <!-- 修改用户 -->
+    <update id="updateUser" parameterType="com.pojo.User">
+    	update [User]  set name = #{name},phoneNum=#{phoneNum},userName=#{userName},password=#{password} where id=#{id}
+    </update>
+    <!-- 修改用户 -->
+    <update id="updatePssword" parameterType="com.pojo.User">
+    	update [User]  set password=#{password} where id=#{id}
+    </update>
+    <!-- 删除用户 -->
+    <delete id="deleteUser" parameterType="com.pojo.User">
+    	delete from [User]  where id=#{id} and role=#{role}
+    </delete>
+    <!--  -->
+    <select id="userLogin" parameterType="com.pojo.User" resultType="com.pojo.User">
+    	select * from [User] where userName=#{userName} and password=#{password}
+    </select>
+</mapper>  
+

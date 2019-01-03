@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+label.radio {
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+  position: relative;
+  margin: 0 5px 5px 0;
+  padding: 0;
+  background-color: #cfcfcf;
+  border-radius: 100%;
+  vertical-align: top;
+  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.1) inset, 0 1px 4px rgba(0, 0, 0, 0.1) inset, 1px -1px 2px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+label.radio > span.pip {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  border-radius: 100%;
+  background: blue;
+  top: 4px;
+  left: 4px;
+  box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.3), 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  background-image: linear-gradient(#ffffff 0, #e7e7e7 100%);
+  transform: scale(0, 0);
+  transition: all 0.2s ease;
+}
+label.radio.on {
+  background-color: #05abe0;
+}
+label.radio.on > span.pip {
+  transform: scale(1, 1);
+}
+label.radio.focus {
+  outline: 0;
+  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.1) inset, 0 1px 4px rgba(0, 0, 0, 0.1) inset, 1px -1px 2px rgba(0, 0, 0, 0.1), 0 0 8px #52a8ec, 0 0 1px 1px rgba(0, 0, 0, 0.75) inset;
+}
+input[type=radio].replaced {
+  position: absolute;
+  left: -9999em;
+}

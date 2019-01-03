@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.SubjectMapper">	
+	<!-- 添加科目 -->
+    <select id="addSubject"  parameterType="com.pojo.Subject">
+    	 insert into Subject (name) values (#{name})
+    </select>
+    <!-- 查询所有科目 -->
+	
+    <select id="selectAllSubject" resultType="com.pojo.Subject" >
+    		select * from Subject 
+	</select>
+     <!-- 查询科目根据id -->
+    <select id="selectSubjectById" resultType="com.pojo.Subject" parameterType="String">
+    		select * from Subject where id=#{id}
+	</select>
+	<!-- 查询科目根据名字模糊 -->
+    <select id="selectSubjectLikeName" resultType="com.pojo.Subject" parameterType="String">
+    		select * from Subject where name like '%'+#{name}+'%'
+	</select>
+	<!-- 查询科目根据名字 -->
+    <select id="selectSubjectByName" resultType="com.pojo.Subject" parameterType="String">
+    		select * from Subject where name  =#{name}
+	</select>
+    <!-- 修改科目 -->
+    <update id="updateSubject" parameterType="com.pojo.Subject">
+    	update Subject set name = #{name} where id=#{id}
+    </update>
+    <!-- 删除科目 -->
+    <delete id="deleteSubject" parameterType="String">
+    	delete from Subject where id=#{id}
+    </delete>
+</mapper>  
+

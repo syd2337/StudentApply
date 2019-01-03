@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.StuCourseMapper">
+	   <resultMap type="com.pojo.Student" id="StudentResult">  
+          <id property="id" column="studentId" />  
+          <result property="studentCode" column="studentCode" /> 
+          <result property="applyNum" column="applyNum" /> 
+          <result property="name" column="name" />  
+          <result property="sex" column="sex" />  
+          <result property="schoolName" column="schoolName" />  
+          <result property="campusName" column="campusName" />
+          <result property="gradeName" column="gradeName" /> 
+          <result property="payCondition" column="payCondition" />
+          <result property="phoneNumOne" column="phoneNumOne" />  
+          <result property="createDate" column="createDate" /> 
+          <result property="prices" column="prices" /> 
+          <result property="state" column="state" />    
+        </resultMap>
+       <resultMap type="com.pojo.Course" id="CourseResult">
+            <id property="id" column="courseId"/>
+            <result property="gradeName" column="gradeName"/>
+            <result property="subjectName" column="subjectName"/>
+            <result property="startTime" column="startTime"/>
+            <result property="endTime" column="endTime"/>
+            <result property="period" column="period"/>
+            <result property="rates" column="rates"/>
+            <result property="times" column="times"/>
+            <result property="theClass" column="theClass"/>
+       </resultMap>    
+       <resultMap type="com.util.ShowStuCourse" id="StuCoursesResult">
+            <id property="id" column="id"/>
+            <id property="payState" column="payState"/>
+            <id property="times" column="times"/>
+            <id property="prices" column="prices"/>
+            <id property="theTimes" column="theTimes"/>
+            <association property="student"  resultMap="StudentResult"/>
+            <association property="course"  resultMap="CourseResult"/>
+       </resultMap>
+       <!-- 查询所有学生课程 -->
+        <select id="allStuCoursesResult"  resultMap="StuCoursesResult">  
+            select s.id,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id,t.payCondition,c.id,c.gradeName,c.subjectName,c.startTime,c.endTime,c.period,c.rates,s.payState,c.theClass 
+            from stuCourse s left outer join student t on s.studentId=t.id
+            left outer join course c on s.courseId=c.id                                        
+        </select>
+         <!-- 根据学生id查询课程 -->
+        <select id="StuCourseByStudentId"  resultMap="StuCoursesResult" parameterType="String">  
+            select s.id,s.payState,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id studentId,t.payCondition,t.prices,c.id courseId,t.applyNum,c.gradeName,c.subjectName,c.startTime,c.endTime,c.period,c.rates,c.times,c.theClass  
+            from stuCourse s left outer join student t on s.studentId=t.id
+            left outer join course c on s.courseId=c.id where s.studentId=#{id} and s.state!=0                                      
+        </select>
+        <!-- 根据学生id查询课程 -->
+        <select id="theStuCourseByStudentId"  resultMap="StuCoursesResult" parameterType="String">  
+            select s.id,s.payState,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id studentId,t.payCondition,t.prices,c.id courseId,t.applyNum,c.gradeName,c.subjectName,c.startTime,c.endTime,c.period,c.rates,c.times,c.theClass  
+            from stuCourse s left outer join student t on s.studentId=t.id
+            left outer join course c on s.courseId=c.id where s.studentId=#{id} and s.state!=0                                   
+        </select>
+        <!-- 根据id查询课程 -->
+        <select id="StuCourseByStuCourseId"  resultMap="StuCoursesResult" parameterType="String">  
+            select s.id,s.payState,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id,c.id,t.payCondition,c.gradeName,c.subjectName,c.startTime,c.endTime,c.period,c.rates,c.theClass  
+            from stuCourse s left outer join student t on s.studentId=t.id
+            left outer join course c on s.courseId=c.id where s.id=#{id} and s.state!=0                                       
+        </select>
+      
+        <!-- 根据课程id查询课程 -->
+        <select id="StuCourseByCourseId"  resultMap="StuCoursesResult" parameterType="String">  
+            select s.id,s.payState,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id studentId,c.id courseId,t.payCondition,c.gradeName,c.subjectName,c.startTime,c.endTime,c.period,c.rates,t.phoneNumOne,t.createDate,c.theClass  
+            from stuCourse s left outer join student t on s.studentId=t.id
+            left outer join course c on s.courseId=c.id where s.courseId=#{id} and s.state!=0  order by  s.createTime desc                                     
+        </select>
+        <!-- 根据科目查询课程 -->
+        <select id="StuCourseBySubjectName"  resultMap="StuCoursesResult" parameterType="String">  
+            select s.id,s.payState,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id studentId,t.createDate,t.phoneNumOne,t.applyNum,c.id courseId,t.payCondition,c.gradeName,c.subjectName,c.startTime,c.endTime,c.period,c.rates,c.theClass  
+            from stuCourse s left outer join student t on s.studentId=t.id
+            left outer join course c on s.courseId=c.id where c.subjectName=#{subjectName} and s.state!=0                                       
+        </select>
+        <!-- 根据第几次课程查询上课人数 -->
+        <select id="StuCourseByCourseIdAndTheTimes"  resultMap="StuCoursesResult" parameterType="java.util.Map">  
+            select r.id,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id studentId,t.createDate,t.phoneNumOne,t.applyNum,c.id courseId,t.payCondition,c.gradeName,c.subjectName,c.startTime,c.endTime,c.period,c.rates,c.theClass  
+            from Register r left outer join student t on r.studentId=t.id
+            left outer join course c on r.courseId=c.id where c.id=#{courseId} and r.theTimes=#{times}                                      
+        </select>		
+	<!-- 添加学生 -->
+     <select id="addStuCourse"  parameterType="com.pojo.StuCourse">
+    	 insert into StuCourse (studentId,courseId,payState,state) 
+			values (#{studentId},#{courseId},#{payState},#{state})
+    </select> 
+    <!-- 查询所有学生课程 -->
+	
+    <select id="selectAllStuCourse" resultType="com.pojo.StuCourse" >
+    		select * from StuCourse 
+	</select> 
+    <!-- 查询学生课程by id -->
+	
+     <select id="selectStuCourseById" resultType="com.pojo.StuCourse" parameterType="String">
+    		select * from StuCourse where id=#{id}
+	</select> 
+    <!-- 动态查询 -->
+    <select id="selectStuCourseDynamic" resultType="com.pojo.StuCourse" parameterType="com.pojo.StuCourse">
+    	select * from StuCourse where
+    	<if test="studentId!=null and courseId ==null">
+    		studentId=#{studentId}
+    	</if>
+    	<if test="studentId!=null and courseId !=null">
+    		and courseId=#{courseId}
+    	</if>
+    	<if test="studentId==null and courseId !=null">
+    		 courseId=#{courseId}
+    	</if>
+    </select> 
+    <!-- 修改学生课程 -->
+    <update id="updateStuCourse" parameterType="com.pojo.StuCourse">
+    	update StuCourse set studentId = #{studentId},courseId=#{courseId},payState=#{payState},state=#{state} where id=#{id}
+    </update> 
+   
+    <!--  删除学生课程 -->
+    <update id="deleteStuCourse" parameterType="String">
+    	update StuCourse set state = 0 where id=#{id}
+    </update>
+     <!--  <delete id="deleteStuCourse" parameterType="String">
+    	delete from StuCourse where id=#{id}
+    </delete> -->
+    <!-- 查看是否重复添加课程 -->
+     <select id="checkStuCourseByStudentAndCourse" resultType="com.pojo.StuCourse" parameterType="com.pojo.StuCourse">
+       select * from stuCourse where courseId=#{courseId} and studentId=#{studentId} and state!=0
+     </select>
+    <!-- 查询选择科目大于4科的 -->
+     <select id="selectStuCourseGtFour" resultType="com.pojo.StuCourse">
+       select studentId from stuCourse group by studentId having count(*) &gt;4
+     </select>
+    <!-- 查询选择科目大于3科的 -->
+     <select id="selectStuCourseGtThree" resultType="com.pojo.StuCourse">
+    	select studentId from stuCourse group by studentId having count(*) &gt;3;
+    </select> 
+    <!-- 查询选择科目大于2科的 -->
+    <select id="selectStuCourseGtTwo" resultType="com.pojo.StuCourse">
+    	select studentId from stuCourse group by studentId having count(*) &gt;2;
+    </select>
+    <!-- 根据学生id查询 -->
+    <select id="selectStuCourseByStudentId" resultType="com.pojo.StuCourse" parameterType="String">
+    	select * from stuCourse where studentId=#{studentId};
+    </select> 
+    <!-- 动态查询 -->
+    <select id="selectStudentDynamicOldNew" resultMap="StuCoursesResult" parameterType="java.util.Map">
+    	select distinct s.id,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id studentId,t.payCondition,t.prices,t.createDate,t.applyNum 
+            from stuCourse s left outer join student t on s.studentId=t.id
+            left outer join course c on s.courseId=c.id  where
+    	<if test="schoolName!='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName}
+    	</if>
+    	<if test="schoolName!='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName!='' and campusName ==''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.name like '%'+#{name}+'%'
+    	</if>
+    	<if test="schoolName!='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName!='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName!='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName!='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.state=#{state}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%'
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.state=#{state}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%'  and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.state=#{state}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.state=#{state}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.state=#{state}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate==null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.state=#{state}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate!=null and subjectName=='' ">
+    		t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.state=#{state} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%'
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate==null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate!=null and subjectName=='' ">
+    		t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.state=#{state} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%'
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate==null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate!=null and subjectName=='' ">
+    		t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.state=#{state} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.sex=#{sex}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.sex=#{sex} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.sex=#{sex} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.sex=#{sex} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate==null and subjectName=='' ">
+    		t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate!=null and subjectName=='' ">
+    		t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and t.state=#{state} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate==null and subjectName=='' ">
+    		t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.phoneNumOne=#{phoneNumOne}  and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.phoneNumOne=#{phoneNumOne} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.phoneNumOne=#{phoneNumOne} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate==null and subjectName=='' ">
+    		t.phoneNumOne=#{phoneNumOne}  and t.gradeName=#{gradeName}  and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.phoneNumOne=#{phoneNumOne}  and t.gradeName=#{gradeName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName!='' and state!='' and createDate!=null and subjectName=='' ">
+    		t.phoneNumOne=#{phoneNumOne}  and t.gradeName=#{gradeName}  and t.state=#{state} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName=='' ">
+    		t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate==null and subjectName!='' ">
+    		t.gradeName=#{gradeName} and c.subjectName=#{subjectName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state!='' and createDate==null and subjectName=='' ">
+    		t.gradeName=#{gradeName} and t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.gradeName=#{gradeName} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and state!='' and createDate!=null and subjectName=='' ">
+    		t.gradeName=#{gradeName} and t.state=#{state} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate==null and subjectName=='' ">
+    		t.state=#{state}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state!='' and createDate!=null and subjectName=='' ">
+    		t.state=#{state} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate!=null and subjectName=='' ">
+    		t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and state=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName}
+    	</if>
+    	and s.state!=0 order by t.createDate desc
+    </select>
+    <!-- 动态查询 -->
+    <select id="selectStudentDynamicNew" resultMap="StuCoursesResult" parameterType="java.util.Map">
+    	select distinct s.id,t.name,t.studentCode,t.sex,t.schoolName,t.campusName,t.gradeName,t.id studentId,t.payCondition,t.prices,t.createDate,t.applyNum 
+            from stuCourse s left outer join student t on s.studentId=t.id
+            left outer join course c on s.courseId=c.id  where
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName}
+    	</if>
+    	<if test="schoolName!='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.schoolName=#{schoolName}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.schoolName=#{schoolName} and t.campusName=#{campusName}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' 
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState=#{payState}
+    	</if>
+    	<if test="schoolName!='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate!=null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.schoolName=#{schoolName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState=#{payState} and t.createDate=#{createDate}
+    	</if> 	
+    	<if test="schoolName=='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.campusName=#{campusName}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' 
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} 
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex}  and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex}  and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex}  and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState=#{payState}
+    	</if>
+    	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate!=null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex}  and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState=#{payState} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.name like '%'+#{name}+'%'
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.name like '%'+#{name}+'%' and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState=#{payState}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name!='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate!=null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState=#{payState} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.sex=#{sex}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState =#{payState}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex!='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate!=null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.sex=#{sex} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState =#{payState} and t.createDate=#{createDate}
+    	</if>
+    	
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.phoneNumOne=#{phoneNumOne}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName!='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState=#{payState}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne!='' and gradeName!='' and payState!='' and createDate!=null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.phoneNumOne=#{phoneNumOne} and t.gradeName=#{gradeName} and s.payState=#{payState} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.gradeName=#{gradeName}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and payState!='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.gradeName=#{gradeName} and s.payState=#{payState}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and payState!='' and createDate!=null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.gradeName=#{gradeName} and s.payState=#{payState} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState!='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and s.payState=#{payState}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState!='' and createDate!=null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and s.payState=#{payState} and t.createDate=#{createDate}
+    	</if>
+    	<if test="schoolName=='' and campusName ==''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate!=null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.createDate=#{createDate}
+    	</if>
+    	and t.state!=0 order by t.createDate desc
+    </select>
+</mapper>  
+
+

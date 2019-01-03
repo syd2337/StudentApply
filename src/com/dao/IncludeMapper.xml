@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.IncludeMapper">	
+	<!-- 添加年级 -->
+    <select id="addInclude"  parameterType="com.pojo.Include">
+    	 insert into Include (title,content,titleType) values (#{title},#{content},#{titleType})
+    </select>
+     <!-- 查询内容根据id -->
+    <select id="selectIncludeById" resultType="com.pojo.Include" parameterType="String">
+    		select * from Include where id=#{id}
+	</select>
+	<select id="selectAllInclude" resultType="com.pojo.Include">
+    		select * from Include order by createDate desc
+	</select>
+	<!-- 查询学校like name -->
+    <select id="selectIncludeLikeName" resultType="com.pojo.Include" parameterType="String">
+    		select * from Include where title like '%'+#{title}+'%'
+	</select>
+	<!-- 查询年级by name -->
+    <select id="selectIncludeByTitleType" resultType="com.pojo.Include" parameterType="String">
+    		select top 7 * from Include  where titleType=#{titleType} order by createDate desc
+	</select>
+    <!-- 修改 年级 -->
+    <update id="updateInclude" parameterType="com.pojo.Include">
+    	update Include set title = #{title}, content=#{content},titleType=#{titleType} where id=#{id}
+    </update>
+    <!-- 删除年级 -->
+    <delete id="deleteInclude" parameterType="String"> 
+    	delete from Include where id=#{id}
+    </delete>
+</mapper>  
+

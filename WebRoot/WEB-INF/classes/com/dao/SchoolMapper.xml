@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.SchoolMapper">	
+	<!-- 添加学校 -->
+    <select id="addSchool"  parameterType="com.pojo.School">
+    	 insert into School (name,code) values (#{name},#{code})
+    </select>
+    <!-- 查询所有学校 -->
+	
+    <select id="selectAllSchool" resultType="com.pojo.School" >
+    		select * from School 
+	</select>
+	<!-- 查询所有学校 -->
+	
+    <select id="selectAllSchoolNum" resultType="Integer" >
+    		select count(id) from School 
+	</select>
+     <!-- 查询学校根据id -->	
+    <select id="selectSchoolById" resultType="com.pojo.School" parameterType="String">
+    		select * from School where id=#{id}
+	</select>
+	<!-- 查询学校根据name -->
+    <select id="selectSchoolByName" resultType="com.pojo.School" parameterType="String">
+    		select * from School where name=#{name}
+	</select>
+	<!-- 查询学校like name -->
+    <select id="selectSchoolLikeName" resultType="com.pojo.School" parameterType="String">
+    		select * from School where name like '%'+#{name}+'%'
+	</select>
+    <!-- 修改 学校 -->
+    <update id="updateSchool" parameterType="com.pojo.School">
+    	update School set name = #{name},code=#{code} where id=#{id}
+    </update>
+    <!-- 删除学校 -->
+    <delete id="deleteSchool" parameterType="String"> 
+    	delete from School where id=#{id}
+    </delete>
+</mapper>  
+
