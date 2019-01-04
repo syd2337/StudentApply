@@ -153,8 +153,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
          //$('#code').qrcode(str);
          $("#output").qrcode({ 
              render: "canvas", //table方式
-             width: 100, //宽度
-             height:100, //高度
+             width: 150, //宽度
+             height:150, //高度
              text: str //任意内容
          });
         

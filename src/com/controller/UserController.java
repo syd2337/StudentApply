@@ -11,14 +11,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
+import com.pojo.Campus;
 import com.pojo.User;
+import com.service.CampusServiceInterface;
 import com.service.UserServiceInterface;
 
 @Controller
 public class UserController {
 	@Autowired
 	private UserServiceInterface userServiceInterface;
-	
+	@Autowired
+	private CampusServiceInterface campusServiceInterface;
 	@RequestMapping("/user.html")
 	/**
 	 * 学校管理
@@ -36,19 +39,42 @@ public class UserController {
 	 * @param request
 	 * @param response
 	 */
-	public String toAdduser(){			
-		return "adduser";		
+	public String toAdduser(HttpServletRequest request, HttpServletResponse response){
+		List<Campus> listCampus = campusServiceInterface.selectAllCampus();
+		request.setAttribute("listCampus", listCampus);
+		return "addUser";		
 	}
-	@RequestMapping("/adduser.html")
-	public void adduser(HttpServletRequest request, HttpServletResponse response){
+	@RequestMapping("/addUser.html")
+	public void addUser(HttpServletRequest request, HttpServletResponse response){
 		User user = new User();
-		String userName=request.getParameter("userName");		
-		user.setName(userName);
+		String userName=request.getParameter("userName");
+		String name=request.getParameter("name");
+		String phone=request.getParameter("phone");
+		String password=request.getParameter("password");
+		String role=request.getParameter("role");
+		String campusName=request.getParameter("campusName");
+		int access=0;
+		if(role.equals("超级管理员")){
+			access=1;
+		}
+		if(role.equals("校区管理员")){
+			access=2;
+		}
+		if(role.equals("校区报名员")){
+			access=3;
+		}
+		user.setUserName(userName);
+		user.setAccess(access);
+		user.setCampusName(campusName);
+		user.setPassword(password);
+		user.setPhoneNum(phone);
+		user.setRole(role);
+		user.setName(name);
 		String message = "";
 		PrintWriter out =null;
 		try {						
 			userServiceInterface.addUser(user);
-			message = JSON.toJSONString(user);			
+			message = JSON.toJSONString("success");			
 			out=response.getWriter();		
 			out.print(message);
 		} catch (Exception e) {

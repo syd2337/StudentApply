@@ -72,5 +72,5 @@ public interface SchoolServiceInterface {
 	 * @return
 	 */
 	 int selectAllSchoolNum();
-
+	 List<String> selectAllSchoolName();
 }

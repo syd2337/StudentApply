@@ -28,21 +28,18 @@ function checkName() {
 
 //检查密码是否符要求
 function checkPassword() {
-	
 	var password = $("#password").val();
-	//alert(password)
 	if (password == '') {
 		$("#password_msg").empty().append("不能空");
 		return false;
 	}
-	return true;
-	//var reg = /^\w{3,10}$/;
-	//if (reg.test(password)) {
-		//$('#password_msg').empty();
-		//return true;
-	//}
-	//$('#password_msg').empty().append("3-10位");
-	//return false;
+	var reg = /^\w{3,10}$/;
+	if (reg.test(password)) {
+		$('#password_msg').empty();
+		return true;
+	}
+	$('#password_msg').empty().append("3-10位");
+	return false;
 
 }
 

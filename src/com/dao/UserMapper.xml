@@ -5,8 +5,8 @@
 <mapper namespace="com.dao.UserMapper">	
 	<!-- 添加用户 -->
     <select id="addUser"  parameterType="com.pojo.User">
-    	 insert into [User]  (name,phoneNum,userName,password)
-			values (#{name},#{phoneNum},#{userName},#{password})
+    	 insert into [User]  (name,phoneNum,userName,password,access,role,campusName)
+			values (#{name},#{phoneNum},#{userName},#{password},#{access},#{role},#{campusName})
     </select>
     <!-- 查询所有用户 -->
 	

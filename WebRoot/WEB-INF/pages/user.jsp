@@ -21,9 +21,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script type="text/javascript" src="Script/log_in.js"></script>
 <script type="text/javascript" language="javascript">
     
-    function updateUser(userId){
-    
-    	
+    function updateUser(userId){	
     	var id = userId;
     	var newSchoolName =$("#newSchoolName").val();
     	//alert(newSchoolName+schoolId);
@@ -47,6 +45,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 	});
     }
+    function  toAddUser(access){
+    	if(access!=1){
+    		alert("您没有权限添加用户");
+    		return;
+    	}
+    	window.location.href='toAddUser.html';
+    } 
 </script>
 <style type="text/css">
     .txtinput1{width:180px;}
@@ -186,9 +191,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <td style="width:70%; text-align:left;"><input id="schoolName" value="${sessionScope.user.userName}" type="text" class="input_2 txtinput1" readonly="readonly"/></td>
     </tr>
     <tr>
-    <!--  <td colspan="2" style="text-align:center;">
-    	<input type="submit" id="btnSubmit" value="修改信息" onclick="updateUser('${sessionScope.user.id}')" class="input2" />
-    </td>-->
+     <td colspan="2" style="text-align:center;">
+    	<input type="submit" id="btnSubmit" value="添加用户" onclick="toAddUser('${sessionScope.user.access}')" class="input2" />
+    </td>
     </tr>
 </table>
 </div>

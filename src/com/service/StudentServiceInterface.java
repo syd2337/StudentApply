@@ -19,4 +19,5 @@ public interface StudentServiceInterface {
 	int selectApplyNum();
 	List<Student> selectStudentByApplyNum(int applyNum);
 	void updateStudentOpenIdAndFormId(Student student);
+	List<Student> selectStudentByCampus(String campusName);
 }

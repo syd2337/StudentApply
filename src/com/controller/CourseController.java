@@ -21,6 +21,7 @@ import com.service.CourseServiceInterface;
 import com.service.GradeServiceInterface;
 import com.service.StuCourseServiceInterface;
 import com.service.SubjectServiceInterface;
+import com.util.Access;
 import com.util.Paging;
 import com.util.ShowStuCourse;
 import com.util.StringToDate;
@@ -55,6 +56,9 @@ public class CourseController {
 	StringToDate strToDate = new StringToDate();
 	@RequestMapping("/course.html")
 	public String course(HttpServletRequest request, HttpServletResponse response){
+		if(Access.getAccess(request)){
+			return "home";
+		}
 		List<Subject> subjectList = subjectServiceInterface.selectAllSubject();
 		List<Grade> gradeList = gradeServiceInterface.selectAllGrade();
 		request.setAttribute("subjectList", subjectList);
@@ -257,6 +261,7 @@ public String getApplyStudent (HttpServletRequest request, HttpServletResponse r
 	String id = request.getParameter("id");
 	
 	try {
+		
 		if(id!=null){
 			List<ShowStuCourse> list = stuCourseServiceInterface.StuCourseByCourseId(id);
 			
@@ -268,5 +273,32 @@ public String getApplyStudent (HttpServletRequest request, HttpServletResponse r
 	return "showApplyStudent";
 	
 	}
-
+/**
+ * 打卡展示课程
+ * @param request
+ * @param response
+ */
+@RequestMapping("showCourse.html")
+public void showCourse(HttpServletRequest request, HttpServletResponse response){
+	String id = request.getParameter("courseId");
+	PrintWriter out = null;
+	try {
+		out = response.getWriter();
+		if(id!=null){
+			List<ShowStuCourse> list = stuCourseServiceInterface.StuCourseByCourseId(id);
+			//System.out.println(JSON.toJSON(list));
+			if(list!=null){
+			String showStuCourseList=JSON.toJSONString(list);
+			out.print(showStuCourseList);
+			}
+		}
+	} catch (Exception e) {
+		// TODO: handle exception
+	}finally{
+		if(out!=null){
+			out.close();
+		}
+	}     
+	
+	}
 }

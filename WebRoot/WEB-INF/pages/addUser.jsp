@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -20,104 +20,100 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script src="Script/Common.js" type="text/javascript"></script>
     <script src="Script/Data.js" type="text/javascript"></script>
     <script type="text/javascript" src="Script/log_in.js"></script>
-    
 <script type="text/javascript" language="javascript">
-	function showCourse(courseId){
-	var gradeName = "初一";
-	var subjectName="历史";
-		//alert(courseId);
-		$.ajax({
-			url:'showCourse.html',
-			type:'POST',
-			data:{
-			'courseId':courseId
-			},
-			dataType:'json',
-			success:function(data){
-			//alert("+++++++++");
-			$("#wrapper").empty();
-				if (data == null) {
-					alert("该年级无课程");
-				} else {
-					var content = "<tr style='height: 25px' align='center'>"
-                	
-                    +"<th scope='col'>编号</th><th scope='col'>姓名</th>"
-                    +"<th scope='col'>年级</th><th scope='col'>科目</th></tr>";				
-					var list = data;
-					//alert(list1);
-					//alert(list)
-					
-					for ( var i = 0; i < list.length; i++) {
-					if(list[i].student!=null){																		
-						content = content
-								+ '<tr align="center">'
-								+ '<td>'+(i+1)+'</td>'					
-								
-								+ '<td>'+list[i].student.name+'</td>'
-								+ '<td>'+gradeName +'</td>'
-								+ '<td>'+subjectName +'</td>'															
-								//+ '"onclick="selectScore(\'' + subject+'\')"/></td>' 
-								+ '</tr>';
-					}
-					}				      
-					$("#wrapper").append(content);
-				}
-		}
-		
-		});
-	}
-    function register(){
-    	var studentId = $("#studentId").val();
-    	var student = $("#studentId");
-    	//alert(stuCourseId.length)
-    	//if(stuCourseId.length!=36){
-    		//alert("不是正确编码")
-    		//return;
-    	//}
-    	if(studentId.length==36){
+    
+    function updateUser(userId){	
+    	var id = userId;
+    	var newSchoolName =$("#newSchoolName").val();
+    	//alert(newSchoolName+schoolId);
+    	
     	$.ajax({
-		url:'toRegister.html',
+		url:'updateSchool.html',
 		type:'POST',
 		data:{
-			'studentId':studentId,
-			
+			'newSchoolName':newSchoolName,
+			'id':id,
 		},
 		dataType:'json',
 		success:function(data){
+		//alert(data);
 			//window.location.href='toEdit.html';
-			if(data==null){
-			var msg = new SpeechSynthesisUtterance("签到失败!");
-    		window.speechSynthesis.speak(msg);
-				alert("签到失败!");
-				document.getElementById('studentId').value='';
-				document.getElementById('studentId').focus();
-			}else if(data=="repeat"){
-			var msg = new SpeechSynthesisUtterance("请不要重复签到!");
-    		window.speechSynthesis.speak(msg);
-				alert("请不要重复签到!");
-				document.getElementById('studentId').value='';
-				document.getElementById('studentId').focus();
-				
-			}else if(data=="error"){
-			var msg = new SpeechSynthesisUtterance("编码不正确!");
-    		window.speechSynthesis.speak(msg);
-				alert("编码不正确!");
-				document.getElementById('studentId').value='';
-				document.getElementById('studentId').focus();
+			if(data!="success"){
+				alert("修改学校失败!");
 			}else{
-			var msg = new SpeechSynthesisUtterance("签到成功"+data.student.name+data.course.subjectName);
-    		window.speechSynthesis.speak(msg);
-				alert("签到成功"+data.student.name+data.course.subjectName);
-				document.getElementById('studentId').value='';
-				document.getElementById('studentId').focus();
-				
+				window.location.href='school.html';
+			};//console.log(data);
+		}
+	});
+    }
+    function  addUser(access){
+    var name = $("#name").val();
+    var userName = $("#userName").val();
+    var password = $("#password").val();
+    var phone =$("#phone").val();
+    var role=$("#role option:selected").val();
+    var campusName=$("#campusName option:selected").val(); //获取选中的项
+			if (name == '') {
+				alert("姓名不能为空");
+				//$('#name_msg').empty().append("不能空");
+				return;
+			}
+			if (userName == '') {
+				alert("账号不能为空");
+				//$('#name_msg').empty().append("不能空");
+				return;
+			}
+			if (password == '') {
+				alert("密码不能为空");
+				//$('#name_msg').empty().append("不能空");
+				return;
+			}
+			var reg = /^[\u4e00-\u9fa5 ]{2,10}$/;
+			if (!reg.test(name)) {
+				alert("请输入正确的姓名");
+				return;
+			}
+			if (phone == '') {
+				alert("电话不为空");
+					//$('#ID_msg').empty().append("不能空");
+					return;
+				}
+				var reg = /^(13[0-9]|14[0-9]|15[0-9]|16[0-9]|18[0-9]|17[0-9]|19[0-9])\d{8}$/;
+				if (!reg.test(phone)) {
+					alert("请输入正确的电话");
+					//$('#ID_msg').empty().append("请输入正确的手机号");
+					return;
+				}
+    if(role!="超级管理员"&&campusName==""){
+    	alert("请选择校区");
+    	return;
+    }
+    	$.ajax({
+		url:'addUser.html',
+		type:'POST',
+		data:{
+			'name':name,
+			'phone':phone,
+			'userName':userName,
+			'role':role,
+			'campusName':campusName,
+			'password':password
+		},
+		dataType:'json',
+		traditional: true,//属性在这里设置
+		success:function(data){
+			//window.location.href='toEdit.html';
+			if(data=="success"){
+				alert("添加用户成功!");
+			}else {
+				alert("该加用户失败");
 			};
 			
 			//console.log(data);
 		}
 	});
-		}
-    }
+    
+    } 
 </script>
 <style type="text/css">
     .txtinput1{width:180px;}
@@ -134,8 +130,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </a>
                 </div>
                 <div class="topxx">
-                    
-                    ${sessionScope.user.name}，欢迎您！ 
+                   
+                    ${sessionScope.user.name}，欢迎您！
                 </div>
                 <div class="blog_nav">
                     <ul>
@@ -241,84 +237,51 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             </div>
             <div class="rightbox">
                 
-<h2 class="mbx">上课扫码 &gt;扫码管理 </h2>
+<h2 class="mbx">个人中心 &gt;添加用户 </h2>
 <div class="cztable">
-<c:if test="${!empty listCourseC1}">
-<table border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0" width="500px" style="margin:30px auto 0px auto;">
     <tr align="center">
-        <th>初一</th>
-        <c:forEach items="${listCourseC1}" var ="li" varStatus="status">
-        <td><a onclick="showCourse('${li.id}')">${li.subjectName}</a></td>
-        </c:forEach>   
-    </tr>   
-</table>
-</c:if>
-<c:if test="${!empty listCourseC2}">
-<table border="0" cellspacing="0" cellpadding="0" >
-    <tr align="center">
-        <th>初二</th>
-        <c:forEach items="${listCourseC2}" var ="li" varStatus="status">
-        <td><a onclick="showCourse('${li.id}')">${li.subjectName}</a></td>
-        </c:forEach>   
-    </tr>   
-</table>
-</c:if>
-<c:if test="${!empty listCourseC3}">
-<table border="0" cellspacing="0" cellpadding="0" >
-    <tr align="center">
-        <th>初三</th>
-        <c:forEach items="${listCourseC3}" var ="li" varStatus="status">
-        <td><a onclick="showCourse('${li.id}')">${li.subjectName}</a></td>
-        </c:forEach>   
-    </tr>   
-</table>
-</c:if>
-<c:if test="${!empty listCourseG1}">
-<table border="0" cellspacing="0" cellpadding="0" >
-    <tr align="center">
-        <th>高一</th>
-        <c:forEach items="${listCourseG1}" var ="li" varStatus="status">
-        <td><a onclick="showCourse('${li.id}')">${li.subjectName}</a></td>
-        </c:forEach>   
-    </tr>   
-</table>
-</c:if>
-<c:if test="${!empty listCourseG2}">
-<table border="0" cellspacing="0" cellpadding="0" >
-    <tr align="center">
-        <th>高二</th>
-        <c:forEach items="${listCourseG2}" var ="li" varStatus="status">
-        <td><a onclick="showCourse('${li.id}')">${li.subjectName}</a></td>
-        </c:forEach>   
-    </tr>   
-</table>
-</c:if>
-<c:if test="${!empty listCourseG3}">
-<table border="0" cellspacing="0" cellpadding="0" >
-    <tr align="center">
-        <th>高三</th>
-        <c:forEach items="${listCourseG3}" var ="li" varStatus="status">
-        <td><a onclick="showCourse('${li.id}')">${li.subjectName}</a></td>
-        </c:forEach>   
-    </tr>   
-</table>
-</c:if>
-<table border="0" cellspacing="0" cellpadding="0" >
-    <tr align="center">
-        <th style="width:20%; text-align:left;">上课编码：</th>
-        <td style="width:70%; text-align:left;"><input id="studentId" value="" type="text" class="input_2 txtinput1" oninput="register();"/></td>
-    </tr>
-    <!--  <tr align="center">
-        <th style="width:20%; text-align:left;">新密码：</th>
-        <td style="width:70%; text-align:left;"><input id="txtNewPwd" value="" type="password" class="input_2 txtinput1" />&nbsp;&nbsp;6~16个字符，区分大小写</td>
+        <th style="width:20%; text-align:left;">姓名：</th>
+        <td style="width:70%; text-align:left;"><input id="name" value="" type="text" class="input_2 txtinput1" maxlength="11"/></td>
     </tr>
     <tr align="center">
-        <th style="width:20%; text-align:left;">确认新密码：</th>
-        <td style="width:70%; text-align:left;"><input id="txtConfirmNewPwd" value="" type="password" class="input_2 txtinput1" /></td>
-    </tr>-->  
-</table>
-<table id="wrapper">
-
+        <th style="width:20%; text-align:left;">电话：</th>
+        <td style="width:70%; text-align:left;"><input id="phone" value="" type="text" class="input_2 txtinput1" maxlength="11"/></td>
+    </tr>
+    <tr align="center">
+        <th style="width:20%; text-align:left;">账号：</th>
+        <td style="width:70%; text-align:left;"><input id="userName" value="" type="text" class="input_2 txtinput1" maxlength="11"/></td>
+    </tr>
+    <tr align="center">
+        <th style="width:20%; text-align:left;">密码：</th>
+        <td style="width:70%; text-align:left;"><input id="password" value="" type="text" class="input_2 txtinput1" maxlength="11"/></td>
+    </tr>
+    <tr align="center">
+        <th style="width:20%; text-align:left;">权限：</th>
+        <td style="width:70%; text-align:left;">
+        <select id="role" name="role">
+                    <option value="超级管理员">超级管理员</option>
+                    <option value="校区管理员">校区管理员</option>
+                    <option value="校区报名员">校区报名员</option>                               
+             </select>
+        </td>
+    </tr>
+    <tr align="center">
+        <th style="width:20%; text-align:left;">校区：</th>
+        <td style="width:70%; text-align:left;">
+        <select id="campusName" name="campusName">
+                    <option value="">请选择</option>
+                    <c:forEach items="${listCampus}" var ="li" varStatus="status">
+                    	<option value="${li.campusName}">${li.campusName}</option>
+                    </c:forEach>                              
+             </select>
+        </td>
+    </tr>
+    <tr>
+     <td colspan="2" style="text-align:center;">
+    	<input type="submit" id="btnSubmit" value="添加用户" onclick="addUser()" class="input2" />
+    </td>
+    </tr>
 </table>
 </div>
 

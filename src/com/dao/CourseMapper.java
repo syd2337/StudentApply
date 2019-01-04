@@ -83,4 +83,5 @@ public interface CourseMapper {
 	 */
 	int selectAllCourseNum();
 	List<Course> selectCourseByGradeNameAndCampusName(Course course);
+	
 }

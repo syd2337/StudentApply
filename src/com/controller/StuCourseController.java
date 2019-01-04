@@ -29,6 +29,7 @@ import com.service.SchoolServiceInterface;
 import com.service.StuCourseServiceInterface;
 import com.service.StudentServiceInterface;
 import com.service.SubjectServiceInterface;
+import com.util.Access;
 import com.util.Paging;
 import com.util.ShowStuCourse;
 import com.util.StrToStr;
@@ -52,12 +53,6 @@ public class StuCourseController {
 	@Autowired
 	private SubjectServiceInterface subjectServiceInterface;
 	StringToDate strToDate = new StringToDate();
-	@RequestMapping("/stuCourse.html")
-	public void stuCourse(){
-		List<ShowStuCourse> list = stuCourseServiceInterface.allStuCoursesResult();
-		String mes = JSON.toJSONString(list);
-		
-	}
 	@RequestMapping("selectStuCourseByStudentId.html")
 	public String selectStuCourseByStudentId(HttpServletRequest request, HttpServletResponse response){
 		String id = request.getParameter("id");
@@ -381,7 +376,15 @@ public class StuCourseController {
 			Map<String,Object> map = new HashMap<String,Object>();
 			List<School> schoolList = schoolServiceInterface.selectAllSchool();
 			List<Grade> gradeList = gradeServiceInterface.selectAllGrade();
-			List<Campus> campusList = campusServiceInterface.selectAllCampus();
+			List<Campus> campusList = new ArrayList<Campus>();
+			if(Access.campusAccess(request)!=null){
+				Campus campus = new Campus();
+				campus.setCampusName(Access.campusAccess(request));
+				campusList.add(campus);
+			}else{
+				campusList = campusServiceInterface.selectAllCampus();
+			}	
+			
 			List<Subject> subjectList = subjectServiceInterface.selectAllSubject();
 			request.setAttribute("subjectList", subjectList);
 			request.setAttribute("schoolList", schoolList);

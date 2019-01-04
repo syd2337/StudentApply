@@ -11,7 +11,7 @@
     <!-- 查询所有课程 -->
 	
     <select id="selectAllCourse" resultType="com.pojo.Course" >
-    		select * from Course order by gradeName
+    		select * from Course order by campusName
 	</select>
 	 <!-- 查询所有课程 -->
 	

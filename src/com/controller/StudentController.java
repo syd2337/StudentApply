@@ -28,6 +28,7 @@ import com.service.SchoolServiceInterface;
 import com.service.StuCourseServiceInterface;
 import com.service.StudentServiceInterface;
 import com.service.SubjectServiceInterface;
+import com.util.Access;
 import com.util.GetApplyNum;
 import com.util.Paging;
 import com.util.SendMessage;
@@ -79,17 +80,27 @@ public class StudentController {
 	@RequestMapping("/student.html")
 	public String student(HttpServletRequest request, HttpServletResponse response){
 		String strPageNo = request.getParameter("pageNo");
+		
 		//String strPageNo ="";
-	
+		List<Campus> campusList = new ArrayList<Campus>();
+		List<Student> allStudent = new ArrayList<Student>();
 		List<School> schoolList = schoolServiceInterface.selectAllSchool();
 		List<Grade> gradeList = gradeServiceInterface.selectAllGrade();
-		List<Campus> campusList = campusServiceInterface.selectAllCampus();
+		if(Access.campusAccess(request)!=null){
+			Campus campus = new Campus();
+			campus.setCampusName(Access.campusAccess(request));
+			campusList.add(campus);
+			allStudent=studentServiceInterface.selectStudentByCampus(Access.campusAccess(request));
+		}else{
+			campusList = campusServiceInterface.selectAllCampus();
+			allStudent = studentServiceInterface.selectAllStudent();
+		}	
 		List<Subject> subjectList = subjectServiceInterface.selectAllSubject();
 		request.setAttribute("schoolList", schoolList);
 		request.setAttribute("gradeList", gradeList);
 		request.setAttribute("campusList", campusList);
 		request.setAttribute("subjectList", subjectList);
-		List<Student> allStudent = studentServiceInterface.selectAllStudent();
+		 
 		Tabs tabs=Paging.studentTabs(allStudent, strPageNo);
 		request.setAttribute("studentList", tabs.getStudentList());
 		request.setAttribute("pageNo", tabs.getPageNo());
@@ -516,7 +527,7 @@ public class StudentController {
 	 */
 	@RequestMapping("/toAddAppStudent.html")
 	public void toAddAppStudent(HttpServletRequest request, HttpServletResponse response){
-		List<School> schoolList = schoolServiceInterface.selectAllSchool();
+		List<String> schoolList = schoolServiceInterface.selectAllSchoolName();
 		List<Grade> gradeList = gradeServiceInterface.selectAllGrade();
 		List<Campus> campusList = campusServiceInterface.selectAllCampus();
 		//String id = request.getParameter("id");

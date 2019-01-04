@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSON;
 import com.pojo.Campus;
 import com.service.CampusServiceInterface;
+import com.util.Access;
 
 /**
  * @author syd2018-8-13ионГ11:36:30
@@ -34,6 +35,9 @@ public class CampusController {
 	
 	@RequestMapping("/campus.html")
 	public String campus(HttpServletRequest request, HttpServletResponse response){
+		if(Access.getAccess(request)){
+			return "home";
+		}
 		List<Campus> campusList = campusServiceInterface.selectAllCampus();
 		request.setAttribute("campusList", campusList);
 		return "campus";

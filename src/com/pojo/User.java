@@ -37,6 +37,20 @@ public class User {
 	 * ÓÃ»§½ÇÉ«
 	 */
 	private String role;
+	private String campusName;
+	private int access;
+	public String getCampusName() {
+		return campusName;
+	}
+	public void setCampusName(String campusName) {
+		this.campusName = campusName;
+	}
+	public int getAccess() {
+		return access;
+	}
+	public void setAccess(int access) {
+		this.access = access;
+	}
 	public String getId() {
 		return id;
 	}

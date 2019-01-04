@@ -19,6 +19,7 @@ import com.pojo.Include;
 import com.service.AboutUsServiceInterface;
 import com.service.AddressServiceInterface;
 import com.service.IncludeServiceInterface;
+import com.util.Access;
 
 @Controller
 public class IncludeController {
@@ -163,6 +164,9 @@ public class IncludeController {
 	}
 	@RequestMapping("/updateAboutUs.html")
 	public String updateAboutUs(HttpServletRequest request,HttpServletResponse response){
+		if(Access.getAccess(request)){
+			return "home";
+		}
 		AboutUs aboutUs = aboutUsServiceInterface.selectAboutUs();
 		request.setAttribute("aboutUs", aboutUs);
 		return "updateAboutUs";	
@@ -194,6 +198,9 @@ public class IncludeController {
 	}
 	@RequestMapping("/updateAddress.html")
 	public String updateAddress(HttpServletRequest request,HttpServletResponse response){
+		if(Access.getAccess(request)){
+			return "home";
+		}
 		Address address = addressServiceInterface.selectAddress();
 		request.setAttribute("address", address);
 		return "updateAddress";	

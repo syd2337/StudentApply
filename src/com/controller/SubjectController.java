@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSON;
 import com.pojo.Subject;
 import com.service.SubjectServiceInterface;
+import com.util.Access;
 
 /**
  * @author syd2018-8-14обнГ2:45:53
@@ -34,6 +35,9 @@ public class SubjectController {
 	Subject subject = new Subject();
 	@RequestMapping("/subject.html")
 	public String Subject(HttpServletRequest request, HttpServletResponse response){
+		if(Access.getAccess(request)){
+			return "home";
+		}
 		List<Subject> subjectList = subjectServiceInterface.selectAllSubject();
 		request.setAttribute("subjectList", subjectList);
 		return "subject";

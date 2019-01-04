@@ -122,4 +122,10 @@ public class StudentService implements StudentServiceInterface {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public List<Student> selectStudentByCampus(String campusName) {
+		// TODO Auto-generated method stub
+		return studentMapper.selectStudentByCampus(campusName);
+	}
 }

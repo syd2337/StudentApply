@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSON;
 import com.pojo.School;
 import com.service.SchoolServiceInterface;
+import com.util.Access;
 
 @Controller
 public class SchoolController {
@@ -23,6 +24,9 @@ public class SchoolController {
 	 * @param response
 	 */
 	public String school(HttpServletRequest request, HttpServletResponse response){
+		if(Access.getAccess(request)){
+			return "home";
+		}
 		List<School> schoolList = schoolServiceInterface.selectAllSchool();
 		request.setAttribute("schoolList", schoolList);
 		return "school";		

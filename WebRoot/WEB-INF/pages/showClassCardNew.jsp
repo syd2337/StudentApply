@@ -163,7 +163,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
              render: "canvas", //table方式
              width: 110, //宽度
              height:110, //高度
-             text: str //任意内容
+             text: str,
+             //任意内容
          });
         
 

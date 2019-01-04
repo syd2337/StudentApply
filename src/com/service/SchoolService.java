@@ -64,4 +64,10 @@ public class SchoolService implements SchoolServiceInterface {
 		// TODO Auto-generated method stub
 		return schoolMapper.selectAllSchoolNum();
 	}
+
+	@Override
+	public List<String> selectAllSchoolName() {
+		// TODO Auto-generated method stub
+		return schoolMapper.selectAllSchoolName();
+	}
 }

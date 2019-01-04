@@ -51,6 +51,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </style>      
     <script src="Script/Base.js" type="text/javascript"></script>
     <script language="javascript" type="text/javascript">
+    $(document).keydown(function(event){ 
+	if(event.keyCode == 13){ //绑定回车 
+	$('#checkStudent').click(); 
+		} 
+	}); 
+
     function deleteStudent(studentId,studentName,payCondition){
     	if(payCondition=="已缴费"){
       	alert("该学生已缴费不能删除");
@@ -282,7 +288,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </c:forEach>                              
         		</select> 
        		 校区：<select id="campusName" name="campusName" >
-                    <option value=""></option>
+                    <!--  <option value=""></option>-->
                     <c:forEach items="${campusList}" var ="li" varStatus="status">
                     	<option value="${li.campusName}">${li.campusName}</option>
                     </c:forEach>                              
@@ -435,7 +441,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
 </body>
 <script type="text/javascript">
-
     var config = {
 
       '.chosen-select'           : {},
@@ -448,13 +453,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
       '.chosen-select-width'     : {width:"95%"}
 
-    }
+    };
 
     for (var selector in config) {
 
       $(selector).chosen(config[selector]);
 
     }
-
   </script>
 </html>

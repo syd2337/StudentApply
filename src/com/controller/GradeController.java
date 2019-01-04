@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSON;
 import com.pojo.Grade;
 import com.service.GradeServiceInterface;
+import com.util.Access;
 
 @Controller
 public class GradeController {
@@ -21,6 +22,9 @@ public class GradeController {
 	
 	@RequestMapping("/grade.html")
 	public String grade(HttpServletRequest request, HttpServletResponse response){
+		if(Access.getAccess(request)){
+			return "home";
+		}
 		List<Grade> gradeList = gradeServiceInterface.selectAllGrade();
 		request.setAttribute("gradeList", gradeList);
 		return "grade";

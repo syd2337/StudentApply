@@ -12,6 +12,11 @@
     <select id="selectAllSchool" resultType="com.pojo.School" >
     		select * from School 
 	</select>
+	 <!-- 查询所有学校 -->
+	
+    <select id="selectAllSchoolName" resultType="java.lang.String" >
+    		select name from School 
+	</select>
 	<!-- 查询所有学校 -->
 	
     <select id="selectAllSchoolNum" resultType="Integer" >

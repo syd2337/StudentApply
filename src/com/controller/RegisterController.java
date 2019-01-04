@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSON;
 import com.pojo.Course;
 import com.pojo.Register;
+import com.pojo.User;
 import com.service.CourseServiceInterface;
 import com.service.RegisterServiceInterface;
 import com.service.StuCourseServiceInterface;
@@ -44,7 +46,30 @@ public class RegisterController {
 	@Autowired
 	private CourseServiceInterface courseServiceInterface;
 	@RequestMapping("/register.html")
-	public String register(){
+	public String register(HttpServletRequest request, HttpServletResponse response){
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		String campusName = user.getCampusName();
+		Course course = new Course();
+		course.setCampusName(campusName);
+		course.setGradeName("初一");
+		List<Course> listCourseC1 = courseServiceInterface.selectCourseByGradeNameAndCampusName(course);
+		course.setGradeName("初二");
+		List<Course> listCourseC2 = courseServiceInterface.selectCourseByGradeNameAndCampusName(course);
+		course.setGradeName("初三");
+		List<Course> listCourseC3 = courseServiceInterface.selectCourseByGradeNameAndCampusName(course);
+		course.setGradeName("高一");
+		List<Course> listCourseG1 = courseServiceInterface.selectCourseByGradeNameAndCampusName(course);
+		course.setGradeName("高二");
+		List<Course> listCourseG2 = courseServiceInterface.selectCourseByGradeNameAndCampusName(course);
+		course.setGradeName("高三");
+		List<Course> listCourseG3 = courseServiceInterface.selectCourseByGradeNameAndCampusName(course);
+		request.setAttribute("listCourseC1", listCourseC1);
+		request.setAttribute("listCourseC2", listCourseC2);
+		request.setAttribute("listCourseC3", listCourseC3);
+		request.setAttribute("listCourseG1", listCourseG1);
+		request.setAttribute("listCourseG2", listCourseG2);
+		request.setAttribute("listCourseG3", listCourseG3);
 		return "register";
 		
 	}

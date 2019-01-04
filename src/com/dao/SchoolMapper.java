@@ -85,5 +85,6 @@ public interface SchoolMapper {
 	 * @return
 	 */
 	 int selectAllSchoolNum();
+	 List<String> selectAllSchoolName();
 
 }

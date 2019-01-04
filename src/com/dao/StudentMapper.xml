@@ -13,7 +13,11 @@
     <select id="selectAllStudent" resultType="com.pojo.Student" >
     		select * from Student order by createDate desc 
 	</select>
+	<!-- 查询学生根据校区 -->
 	
+    <select id="selectStudentByCampus" parameterType="String" resultType="com.pojo.Student" >
+    		select * from Student where campusName=#{campusName} order by createDate desc 
+	</select>
      <!-- 查询学生根据id -->
 	
     <select id="selectStudentById" resultType="com.pojo.Student" parameterType="String">
