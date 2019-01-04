@@ -468,6 +468,9 @@
     	<if test="schoolName=='' and campusName !=''  and name!='' and sex=='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
     		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' 
     	</if>
+    	<if test="schoolName=='' and campusName !=''  and name=='' and sex=='' and  phoneNumOne=='' and gradeName!='' and payState=='' and createDate==null and subjectName!='' ">
+    		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.gradeName=#{gradeName} 
+    	</if>
     	<if test="schoolName=='' and campusName !=''  and name!='' and sex!='' and  phoneNumOne=='' and gradeName=='' and payState=='' and createDate==null and subjectName!='' ">
     		c.subjectName=#{subjectName} and t.campusName=#{campusName} and t.name like '%'+#{name}+'%' and t.sex=#{sex} 
     	</if>
@@ -549,6 +552,7 @@
     	</if>
     	and t.state!=0 order by t.createDate desc
     </select>
+    
 </mapper>  
 
 
